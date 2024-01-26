@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Bash script that displays: The content of the current directory.
+
+for item in *;
+do
+	echo "$item" | cut -d '-' -f 2
+done
