@@ -24,7 +24,7 @@ sigint_handler()
 
 sigquit_handler()
 {
-	rm "$pud_file"
+	rm "$pid_file"
 	exit 0
 }
 
