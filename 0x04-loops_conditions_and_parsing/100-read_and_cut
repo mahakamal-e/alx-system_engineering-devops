@@ -3,6 +3,6 @@
 
 while IFS=':' read -r username _ uid _ _ home shell
 do
-    echo "$username:$uid:$home"
+	echo "$username:$uid:$home"
 done < /etc/passwd
 
