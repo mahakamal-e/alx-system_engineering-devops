@@ -33,7 +33,7 @@ int main(void)
 			perror("Fork error");
 			exit(EXIT_FAILURE);
 		}
-		else
+		else if (child_pid == 0)
 		{
 			printf("Zombie process created, PID: %d\n", getpid());
 			count++;
