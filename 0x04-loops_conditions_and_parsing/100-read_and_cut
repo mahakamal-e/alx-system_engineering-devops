@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Using a while loop to read each line of /etc/passwd
 
-while IFS=':' read -r username _ uid _ _ home shell;
+while IFS=':' read -r username _ uid _ _ home shell
 do
     echo "$username:$uid:$home"
 done < /etc/passwd
