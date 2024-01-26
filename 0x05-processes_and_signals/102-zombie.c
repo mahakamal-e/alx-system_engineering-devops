@@ -31,14 +31,15 @@ int main(void)
 		if (child_pid < 0)
 		{
 			perror("Fork error");
-			exit(EXIT_FAILURE);
+			return (1);
 		}
 		else if (child_pid == 0)
 		{
 			printf("Zombie process created, PID: %d\n", getpid());
+			exit(0);
 			count++;
 		}
 	}
 	infinite_while();
-	return (EXIT_SUCCESS);
+	return (0);
 }
