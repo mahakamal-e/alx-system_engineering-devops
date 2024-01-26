@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# This is a bash scrip displays To infinity and beyond indefinitely.
+pid=$(pgrep -f './7-highlander')
+kill -9 "$pid"
