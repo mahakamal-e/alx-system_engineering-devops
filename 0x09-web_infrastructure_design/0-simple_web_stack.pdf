@@ -1,0 +1,29 @@
+What is a server:
+A server is a computer or a system that is dedicated to managing network resources and providing services to other computers, known as clients. In the context of web hosting, a server is a computer responsible for storing website files, processing requests, and delivering content to users over the internet.
+What is the role of the domain name:
+A domain name is a human-readable address that represents the numeric IP address of a server. It serves as a user-friendly way for people to access websites. The role of a domain name is to provide a memorable and easy-to-use alias for the actual IP address of the server hosting a website.
+What type of DNS record www is in www.foobar.com:
+The DNS record type associated with "www" in www.foobar.com is typically a CNAME (Canonical Name) record. This record points the www subdomain to the main domain (foobar.com) or another domain, allowing them to share the same IP address or server.
+What is the role of the web server:
+The web server is responsible for handling HTTP requests from clients (browsers) and serving web pages or other web content in response. It manages static content (like HTML, CSS, and images) and may also forward dynamic requests to an application server for processing.
+What is the role of the application server:
+The application server is responsible for executing server-side scripts and running the business logic of a web application. It processes dynamic content, interacts with databases, and generates HTML or other content for the web server to deliver to the client.
+What is the role of the database:
+The database stores and manages the data needed by the web application. It allows for efficient data retrieval, storage, and manipulation. The application server communicates with the database to perform operations such as querying for information or updating records.
+What is the server using to communicate with the computer of the user requesting the website:
+The server communicates with the user's computer over the internet using the HTTP (Hypertext Transfer Protocol) or its secure counterpart, HTTPS. HTTP is the protocol that enables the transfer of web pages and other resources between the server and the user's browser.
+Issues with the Infrastructure:
+Single Point of Failure (SPOF):
+
+This infrastructure has a single server, making it a potential single point of failure. If the server goes down due to hardware issues, software failures, or other reasons, the entire website becomes inaccessible.
+Downtime during Maintenance:
+
+When performing maintenance tasks, such as deploying new code, the web server may need to be restarted. During this time, the website may experience downtime, affecting users' ability to access the site.
+Scalability Challenges:
+
+The infrastructure may face challenges in handling a large volume of incoming traffic. Scaling the system to accommodate increased traffic might be difficult with only one server, limiting the website's ability to handle growth effectively.
+
+
+
+
+
