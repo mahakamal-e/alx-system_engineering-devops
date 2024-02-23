@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 What is a server:
 A server is a computer or a system that is dedicated to managing network resources and providing services to other computers, known as clients. In the context of web hosting, a server is a computer responsible for storing website files, processing requests, and delivering content to users over the internet.
 What is the role of the domain name:
@@ -27,3 +28,7 @@ The infrastructure may face challenges in handling a large volume of incoming tr
 
 
 
+=======
+Task 0.
+##Whatis a server:
+>>>>>>> 818a0f5932b14034dc8e0cd526e4c2396a989466
