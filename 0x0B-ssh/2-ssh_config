@@ -1,4 +1,7 @@
+#!/usr/bin/env bash
 # An SSH configuration file for client configuration
-Host *
+CONFIG="Host *
   PasswordAuthentication no
-  IdentityFile ~/.ssh/school
+  IdentityFile ~/.ssh/school"
+echo "$CONFIG" >> ~/.ssh/config
+chmod 600 ~/.ssh/config
