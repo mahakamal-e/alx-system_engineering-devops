@@ -3,8 +3,7 @@
 #to another page.
 sudo apt-get update
 sudo apt-get install -y nginx 
-sudo ufw allow 'Nginx HTTP'
-echo "Hello World!" | sudo tee /var/www/html/index.html
+echo "Hello World!" >  /var/www/html/index.html
 
 echo "server {
    listen 80 default_server;
