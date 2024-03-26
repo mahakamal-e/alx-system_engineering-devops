@@ -12,8 +12,11 @@ echo "server {
    root /var/www/html;
    index index.html;
    location /redirect_me {
-      return 301 https://www.google.com/;
+      return 301 https://www.yoytube.com/;
    }
+   location / {
+        try_files $uri $uri/ =404;
+    }
 
 
 }" > /etc/nginx/sites-available/default
