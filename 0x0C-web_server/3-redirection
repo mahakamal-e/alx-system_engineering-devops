@@ -3,7 +3,11 @@
 #to another page.
 sudo apt-get update
 sudo apt-get install -y nginx 
-echo "Hello World!" >  /var/www/html/index.html
+
+echo "Hello World!" > /var/www/html/index.html
+
+echo "Ceci n'est pas une page" > /var/www/html/404.html
+
 echo "server {
    listen 80 default_server;
    listen [::]:80 default_server;
@@ -11,11 +15,10 @@ echo "server {
    root /var/www/html;
    index index.html;
    location /redirect_me {
-      return 301 https://www.youtube.com/;
+      return 301 https://www.google.com/;
    }
-   location / {
-        try_files \$uri \$uri/ =404;
-    }
+
+
 }" > /etc/nginx/sites-available/default
 
 sudo service nginx restart
