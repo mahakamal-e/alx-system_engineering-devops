@@ -5,9 +5,6 @@ sudo apt-get update
 sudo apt-get install -y nginx 
 
 echo "Hello World!" > /var/www/html/index.html
-
-echo "Ceci n'est pas une page" > /var/www/html/404.html
-
 echo "server {
    listen 80 default_server;
    listen [::]:80 default_server;
@@ -21,4 +18,8 @@ echo "server {
 
 }" > /etc/nginx/sites-available/default
 
-sudo service nginx restart
+if [ "$(pgrep -c nginx)" -le 0 ]; then
+	service nginx start
+else
+	service nginx restart
+fi
