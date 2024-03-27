@@ -1,10 +1,37 @@
 #!/usr/bin/env bash
 #Configure your Nginx server so that /redirect_me is redirecting,
 #to another page.
-sudo apt-get -y update
-sudo apt-get -y install nginx
-sudo ufw allow 'Nginx HTTP'
-sudo sh -c 'echo "Hello World!" > /var/www/html/index.nginx-debian.html'
-sudo sed -i '24i\ location /redirect_me {\n return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n }' /etc/nginx/sites-available/default
-sudo service nginx start
-sudo nginx -s reload
+apt-get update
+apt-get -y install nginx
+
+# Allow HTTP traffic through firewall
+ufw allow 'Nginx HTTP'
+
+# Create directory for web files and set permissions
+mkdir -p /var/www/html/
+chmod -R 755 /var/www
+
+# Create index.html file with "Hello World!" content
+echo 'Hello World!' > /var/www/html/index.html
+
+# Configure Nginx server block
+cat <<EOF > /etc/nginx/sites-enabled/default
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html;
+    server_name _;
+
+    location / {
+        try_files \$uri \$uri/ =404;
+    }
+
+    location /redirect_me {
+        rewrite ^ https://sketchfab.com/bluepeno/models permanent;
+    }
+}
+EOF
+
+# Restart Nginx service
+service nginx restart
