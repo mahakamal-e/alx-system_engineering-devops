@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+#Configure your Nginx server so that /redirect_me is redirecting,
+#to another page.
+#!/bin/bash
+
+# Install Nginx
+apt-get update
+apt-get install -y nginx
+mkdir -p /etc/nginx/html
+# Create custom 404 page
+echo "Ceci n'est pas une page" > /etc/nginx/html/404.html
+
+# Configure Nginx to use the custom 404 page
+cat <<EOF > /etc/nginx/sites-available/default
+server {
+    listen 80 default_server;
+    root /etc/nginx/html;
+    index index.html index.htm;
+
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
+    }
+}
+EOF
+service nginx restart
