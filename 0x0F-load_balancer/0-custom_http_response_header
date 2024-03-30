@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 # Configure custom Nginx response header.
-if ! command -v nginx &> /dev/null; then
-    sudo apt-get update
-    sudo apt-get install -y nginx
-fi
-
+sudo apt-get update
+sudo apt-get install -y nginx
+sudo ufw allow 'Nginx HTTP'
+sudo sh -c 'echo "Hello World!" > /var/www/html/index.nginx-debian.html'
 sudo sed -i '24i\  add_header X-Served-By $HOSTNAME;\n' /etc/nginx/sites-available/default
-echo 'Hello World!' | sudo tee /var/www/html/index.nginx-debian.html >/dev/null
 sudo service nginx restart
