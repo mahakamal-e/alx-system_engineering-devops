@@ -6,4 +6,5 @@ if ! command -v nginx &> /dev/null; then
 fi
 
 sudo sed -i '24i\  add_header X-Served-By $HOSTNAME;\n' /etc/nginx/sites-available/default
+echo 'Hello World!' | sudo tee /var/www/html/index.nginx-debian.html >/dev/null
 sudo service nginx restart
