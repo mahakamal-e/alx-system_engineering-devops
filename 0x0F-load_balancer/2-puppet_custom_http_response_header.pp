@@ -1,40 +1,34 @@
-# 2-puppet_custom_http_response_header.pp
-file { '/etc/facter/facts.d/custom_hostname.txt':
-  ensure  => file,
-  content => "hostname=${hostname}",
-}
-
-# Update package lists
-exec { 'update':
-  command  => 'apt-get update',
-  provider => shell,
+# Update the system
+exec { 'apt update':
+  command => 'apt-get update',
+  path    => '/usr/sbin:/usr/bin:/sbin:/bin',
 }
 
 # Install Nginx
 package { 'nginx':
-  ensure  => installed,
-  require => Exec['update'],
+  ensure => installed,
+  require => Exec['apt update'],
 }
 
-# Define Nginx configuration file
-file { '/etc/nginx/sites-available/default':
+# Allow Nginx through the firewall
+exec { 'Nginx HTTP':
+  command => 'ufw allow "Nginx HTTP"',
+  path    => '/usr/sbin:/usr/bin:/sbin:/bin',
+  require => Package['nginx'],
+}
+
+# Set the custom HTTP response header
+file { '/etc/nginx/conf.d/custom-header.conf':
   ensure  => file,
-  content => template('nginx/default.erb'),
+  content => 'server_tokens off;
+              add_header X-Served-By $hostname;',
+  require => Package['nginx'],
   notify  => Service['nginx'],
 }
 
-# Manage custom HTTP header in Nginx configuration
-file_line { 'custom_http_header':
-  ensure  => present,
-  path    => '/etc/nginx/sites-available/default',
-  line    => '    add_header X-Served-By $hostname;',
-  match   => '^\s*location / {$',
-  require => File['/etc/nginx/sites-available/default'],
-}
-
-# Manage Nginx service
+# Restart Nginx
 service { 'nginx':
-  ensure    => running,
-  enable    => true,
-  subscribe => File['/etc/nginx/sites-available/default'],
+  ensure  => running,
+  enable  => true,
+  require => [Package['nginx'], File['/etc/nginx/conf.d/custom-header.conf']],
 }
