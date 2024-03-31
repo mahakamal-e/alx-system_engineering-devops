@@ -1,31 +1,19 @@
 # Creating a custom HTTP header response with Puppet.
-
-file { '/etc/facter/facts.d/custom_hostname.txt':
-  ensure  => file,
-  content => "hostname=${hostname}",
+exec { 'update':
+  command  => 'sudo apt-get update',
+  provider => shell,
 }
-
-package { 'nginx':
-  ensure  => present,
-  require => Exec['update'],
+-> package {'nginx':
+  ensure => present,
 }
-
-file { '/etc/nginx/sites-available/default':
-  ensure  => present,
-  content => template('nginx/default.erb'),
-  notify  => Service['nginx'],
-}
-
-file_line { 'header line':
+-> file_line { 'header line':
   ensure => present,
   path   => '/etc/nginx/sites-available/default',
-  line   => "	add_header X-Served-By ${::hostname};",
+  line   => "	location / {
+  add_header X-Served-By ${hostname};",
   match  => '^\tlocation / {',
-  require => File['/etc/nginx/sites-available/default'],
 }
-
-service { 'nginx':
-  ensure     => running,
-  enable     => true,
-  subscribe  => File['/etc/nginx/sites-available/default'],
+-> exec { 'restart service':
+  command  => 'sudo service nginx restart',
+  provider => shell,
 }
