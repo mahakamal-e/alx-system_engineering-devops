@@ -1,23 +1,21 @@
-# Update the system
-exec { 'apt update':
+# Creating a custom HTTP header response with Puppet.
+
+exec { 'update':
   command => 'apt-get update',
   path    => '/usr/sbin:/usr/bin:/sbin:/bin',
 }
 
-# Install Nginx
 package { 'nginx':
   ensure => installed,
-  require => Exec['apt update'],
+  require => Exec['update'],
 }
 
-# Allow Nginx through the firewall
 exec { 'Nginx HTTP':
   command => 'ufw allow "Nginx HTTP"',
   path    => '/usr/sbin:/usr/bin:/sbin:/bin',
   require => Package['nginx'],
 }
 
-# Set the custom HTTP response header
 file { '/etc/nginx/conf.d/custom-header.conf':
   ensure  => file,
   content => 'server_tokens off;
@@ -26,7 +24,6 @@ file { '/etc/nginx/conf.d/custom-header.conf':
   notify  => Service['nginx'],
 }
 
-# Restart Nginx
 service { 'nginx':
   ensure  => running,
   enable  => true,
