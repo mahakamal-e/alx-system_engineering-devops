@@ -6,7 +6,7 @@ display_info () {
 }
 
 if [ "$#" -eq 2 ]; then
-  display_info "$1" "$2"
+  display_info "$2.$1" "$2"
 else
   display_info "$1" "www"
   display_info "$1" "lb-01"
