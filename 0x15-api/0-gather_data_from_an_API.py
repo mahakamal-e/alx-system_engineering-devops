@@ -1,25 +1,32 @@
 #!/usr/bin/python3
-""" using this REST API, for a given employee ID """
+""" returns information about
+emplyee todo list
+using emplyee id
+using REST API
+"""
+
 import requests
 import sys
 
-
 if __name__ == "__main__":
-    employee_id = sys.argv[1]
+
     url = "https://jsonplaceholder.typicode.com/"
-    employee_name = requests.get(f"{url}users/{employee_id}").json()
-    employee_todo = requests.get(f"{url}todos?userId={employee_id}").json()
+
+    emplyee_todo = requests.get(f"{url}/users/{sys.argv[1]}/todos")
+    emplyee_name = requests.get(f"{url}/users/{sys.argv[1]}")
+
+    emplyee_todo = emplyee_todo.json()
+    emplyee_name = emplyee_name.json()['name']
 
     completed_tasks = 0
 
-    for task in employee_todo:
+    for task in emplyee_todo:
         if task['completed']:
             completed_tasks += 1
 
-    progress_message = f"Employee {employee_name['name']} is done with tasks " \
-                       f"({completed_tasks}/{len(employee_todo)}):"
+    print("Employee {} is done with tasks({}/{}):".
+          format(emplyee_name, completed_tasks, len(emplyee_todo)))
 
-    print(progress_message)
-    for task in employee_todo:
-        if task['completed']:
-            print(f"\t{task['title']}")
+    for line in emplyee_todo:
+        if line['completed']:
+            print(f"\t {line['title']}")
