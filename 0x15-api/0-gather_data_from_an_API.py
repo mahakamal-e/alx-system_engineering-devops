@@ -16,8 +16,10 @@ if __name__ == "__main__":
         if task['completed']:
             completed_tasks += 1
 
-    print(f"Employee {employee_name['name']} is done with tasks "
-          f"({completed_tasks}/{len(employee_todo)}):")
+    progress_message = f"Employee {employee_name['name']} is done with tasks " \
+                       f"({completed_tasks}/{len(employee_todo)}):"
+
+    print(progress_message)
     for task in employee_todo:
         if task['completed']:
             print(f"\t{task['title']}")
