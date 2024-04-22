@@ -1,22 +1,18 @@
 #!/usr/bin/python3
-""" returns information about
-emplyee todo list
-using emplyee id
-using REST API
 """
-
+ Using REST API, for a given employee ID,
+ returns information about his/her TODO list 
+"""
 import requests
 import sys
 
+
 if __name__ == "__main__":
-
     url = "https://jsonplaceholder.typicode.com/"
+    employee_id = sys.argv[1]
+    emplyee_todo = requests.get(f"{url}/users/{employee_id}/todos").json()
+    emplyee_name = requests.get(f"{url}/todos?userId=/{employee_id}").json()
 
-    emplyee_todo = requests.get(f"{url}/users/{sys.argv[1]}/todos")
-    emplyee_name = requests.get(f"{url}/users/{sys.argv[1]}")
-
-    emplyee_todo = emplyee_todo.json()
-    emplyee_name = emplyee_name.json()['name']
 
     completed_tasks = 0
 
