@@ -6,24 +6,22 @@
 import requests
 import sys
 
-
 if __name__ == "__main__":
     url = "https://jsonplaceholder.typicode.com/"
     employee_id = sys.argv[1]
-    emplyee_todo = requests.get(f"{url}/users/{employee_id}/todos").json()
-    emplyee_name = requests.get(f"{url}/todos?userId=/{employee_id}").json()
-
+    employee_name = requests.get(f"{url}users/{employee_id}").json()
+    employee_todo = requests.get(f"{url}todos?userId={employee_id}").json()
 
     completed_tasks = 0
 
-    for task in emplyee_todo:
+    for task in employee_todo:
         if task['completed']:
             completed_tasks += 1
 
     print("Employee {} is done with tasks({}/{}):"
-          .format(name_.get('name'), completed_tasks,
-                  len(emplyee_todo)))
+          .format(employee_name.get('name'), completed_tasks,
+                  len(employee_todo)))
 
-    for line in emplyee_todo:
-        if line['completed']:
-            print(f"\t {line['title']}")
+    for task in employee_todo:
+        if task['completed']:
+            print(f"\t {task['title']}")
