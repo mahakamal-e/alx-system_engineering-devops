@@ -20,8 +20,9 @@ if __name__ == "__main__":
         if task['completed']:
             completed_tasks += 1
 
-    print("Employee {} is done with tasks({}/{}):".
-          format(emplyee_name, completed_tasks, len(emplyee_todo)))
+    print("Employee {} is done with tasks({}/{}):"
+          .format(name_.get('name'), completed_tasks,
+                  len(emplyee_todo)))
 
     for line in emplyee_todo:
         if line['completed']:
