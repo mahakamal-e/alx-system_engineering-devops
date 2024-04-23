@@ -28,8 +28,7 @@ if __name__ == "__main__":
         })
 
     updated_user[employee_id] = total_tasks
-    json_filename = employee_id + ".json"
 
     with open("{}.json".format(employee_id), 'w') as file:
-        json.dump(json_data, file, indent=None)
+        json.dump(updated_user, file)
 
