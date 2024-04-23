@@ -1,34 +1,32 @@
 #!/usr/bin/python3
 """
 Using REST API, for a given employee ID,
-returns information about his/her TODO list
+returns information about his/her TODO list progress.
 and exports it to a CSV file
 """
+import csv
 import requests
 import sys
-import csv
+
 
 if __name__ == "__main__":
     url = "https://jsonplaceholder.typicode.com/"
     employee_id = sys.argv[1]
-    employee_name = requests.get(f"{url}users/{employee_id}").json()
-    employee_todo = requests.get(f"{url}todos?userId={employee_id}").json()
 
-    filename = f"{employee_id}.csv"
+    employee_name = requests.get("{}users/{}".format(url, employee_id)).json()
+    employee_todos = requests.get("{}todos?userId={}".format(url, employee_id)).json()
 
-    with open(filename, 'w', newline='') as csvfile:
-        csvwriter = csv.writer(csvfile)
-        csvwriter.writerow(["USER_ID", "USERNAME",
-                            "TASK_COMPLETED_STATUS", "TASK_TITLE"])
+    csv_data = []
 
-        for task in employee_todo:
-            task_id = task['id']
-            task_title = task['title']
-            task_completed = task['completed']
+    for todo in employee_todos:
+        csv_data.append({
+            "USER_ID": employee_id,
+            "USERNAME": employee_name.get("username"),
+            "TASK_COMPLETED_STATUS": todo.get("completed"),
+            "TASK_TITLE": todo.get("title")
+        })
+    with open("{}.csv".format(employee_id), 'w') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=csv_data[0].keys(),
+                                quoting=csv.QUOTE_ALL)
 
-            csvwriter.writerow([employee_id, employee_name.get('name'),
-                               task_completed, task_title])
-
-    print(f"Exported TODO list for Employee {employee_name.get('name')}" \
-          f"to {filename}")
-
+        writer.writerows(csv_data)
