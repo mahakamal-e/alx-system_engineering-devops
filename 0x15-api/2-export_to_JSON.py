@@ -17,16 +17,19 @@ if __name__ == "__main__":
     employee_todos = requests.get(
             "{}todos?userId={}".format(url, employee_id)
     ).json()
+    total_tasks = []
+    updated_user = {}
 
-    json_data = []
-
-    for todo in employee_todos:
-        json_data.append({
-            "USER_ID": employee_id,
-            "USERNAME": employee_name.get("username"),
-            "TASK_COMPLETED_STATUS": todo.get("completed"),
-            "TASK_TITLE": todo.get("title")
+    for task in employee_todos:
+        total_tasks.append({
+            "task": task.get('title'),
+            "completed": task.get('completed'),
+            "username": employee_name.get("username"),  # Corrected variable name
         })
+
+    updated_user[employee_id] = total_tasks
+    json_filename = employee_id + ".json"
+
     with open("{}.json".format(employee_id), 'w') as file:
         json.dump(json_data, file, indent=None)
 
