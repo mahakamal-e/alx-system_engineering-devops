@@ -14,7 +14,9 @@ if __name__ == "__main__":
     employee_id = sys.argv[1]
 
     employee_name = requests.get("{}users/{}".format(url, employee_id)).json()
-    employee_todos = requests.get("{}todos?userId={}".format(url, employee_id)).json()
+    employee_todos = requests.get(
+            "{}todos?userId={}".format(url, employee_id)
+    ).json()
 
     csv_data = []
 
