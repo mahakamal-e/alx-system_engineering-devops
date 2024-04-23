@@ -24,7 +24,7 @@ if __name__ == "__main__":
         total_tasks.append({
             "task": task.get('title'),
             "completed": task.get('completed'),
-            "username": employee_name.get("username"),  # Corrected variable name
+            "username": employee_name.get("username"),
         })
 
     updated_user[employee_id] = total_tasks
