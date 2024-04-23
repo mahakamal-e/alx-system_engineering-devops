@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Use ssh key in ~/.ssh/school 
+ssh -i ~/.ssh/school ubuntu@100.26.171.116
