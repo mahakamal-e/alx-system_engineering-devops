@@ -31,4 +31,3 @@ if __name__ == "__main__":
 
     with open("{}.json".format(employee_id), 'w') as file:
         json.dump(updated_user, file)
-
