@@ -3,11 +3,14 @@
 import requests
 
 
-def recurse(subreddit, hot_list=[], after=None):
+def recurse(subreddit, hot_list=None, after=None):
     """
     A recursive function that queries the Reddit API,
     and returns a list containing the titles of all hot articles
     """
+    if hot_list is None:
+        hot_list = []  # Initialize hot_list if not provided
+
     url = f"https://www.reddit.com/r/{subreddit}/hot.json?limit=100"
     if after:
         url += f"&after={after}"
