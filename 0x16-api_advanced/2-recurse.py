@@ -16,13 +16,25 @@ def recurse(subreddit, hot_list=None, after=None):
         url += f"&after={after}"
     headers = {'User-Agent': 'MyApp'}
     response = requests.get(url, headers=headers)
-    if response.status_code == 404:
-        return None
-    data = response.json().get('data', {})
-    for post in data.get('children', []):
-        hot_list.append(post.get('data').get('title'))
 
-    if data.get('after'):
-        return recurse(subreddit, hot_list, data.get('after'))
+    # Check for successful response
+    if response.status_code != 200:
+        print("Error:", response.status_code)
+        return None
+
+    data = response.json().get('data', {})
+
+    # Check if 'children' key exists in the data
+    if 'children' in data:
+        # Extract titles of hot posts
+        for post in data['children']:
+            hot_list.append(post['data'].get('title'))
+
+        # Recursively call the function if there are more pages
+        if data.get('after'):
+            return recurse(subreddit, hot_list, data['after'])
+        else:
+            return hot_list
     else:
-        return hot_list
+        print("Error: Unexpected response format")
+        return None
