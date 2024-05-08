@@ -1,67 +1,58 @@
 #!/usr/bin/python3
-""" Count words using recursive function """
+"""Implement count_words function"""
 
 import requests
-import sys
-from collections import defaultdict
 
 
-def count_words(subreddit, word_list):
+def count_words(subreddit, word_list, after=None, count_dict=None):
     """
-    A recursive function that queries the Reddit API,
-    parses the title of all hot articles,
-    and prints a sorted count of given keywords.
-
-    Args:
-        subreddit (str): The name of the subreddit to search.
-        word_list (list): A list of keywords to count occurrences for.
-
-    Returns:
-        None
+        queries the Reddit API, parses the title of all hot articles,
+        and prints a sorted count of given keywords
     """
-    counts = defaultdict(int)
-    _count_words_recursive(subreddit, set(word_list), counts)
-    sorted_counts = sorted(counts.items(), key=lambda x: (-x[1], x[0].lower()))
-    for keyword, count in sorted_counts:
-        print(f"{keyword.lower()}: {count}")
 
+    if not count_dict:
+        count_dict = {key.lower(): 0 for key in word_list}
 
-def _count_words_recursive(subreddit, word_set, counts, after=None):
-    """
-    A recursive helper function to query the Reddit API,
-    and count occurrences of keywords.
+    url = 'https://www.reddit.com/r/{}/hot/.json'.format(subreddit)
+    params = {'limit': 100, 'after': after}
+    headers = {'User-Agent': 'custom user-agent'}
 
-    Args:
-        subreddit (str): The name of the subreddit to search.
-        word_set (set): A set of keywords to count occurrences for.
-        counts (dict): A dictionary to store keyword counts.
-        after (str): A token used for pagination in Reddit API responses.
-
-    Returns:
-        None
-    """
-    if not word_set:
-        return
-
-    url = f"https://www.reddit.com/r/{subreddit}/hot.json?limit=100"
-    if after:
-        url += f"&after={after}"
-
-    headers = {'User-Agent': 'MyApp'}
+    response = requests.get(url,
+                            params=params,
+                            headers=headers,
+                            allow_redirects=False)
 
     try:
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()
-        data = response.json()
-        for post in data['data']['children']:
-            title = post['data']['title']
-            if title:
-                for keyword in word_set:
-                    if keyword in title.lower().split():
-                        counts[keyword] += 1
+        results = response.json()
+        if response.status_code == 404:
+            raise Exception
+    except Exception:
+        return
 
-        after = data['data']['after']
-        if after:
-            _count_words_recursive(subreddit, word_set, counts, after)
-    except requests.RequestException as e:
-        print("Error:", e)
+    data = response.json().get('data', {})
+    for post in data.get('children', []):
+        title = post.get('data', {}).get('title', '').lower().split()
+
+        for key in count_dict.keys():
+            if key in title:
+                times = len([t for t in title if t == key.lower()])
+                count_dict[key] += times
+
+    if data.get('after'):
+        return count_words(subreddit, word_list, data.get('after'), count_dict)
+
+    else:
+        if len(word_list) > len(count_dict.keys()):
+            temp_dict = count_dict.copy()
+            for word in word_list:
+                word_in_lowecase = word.lower()
+                if word not in count_dict and word_in_lowecase in count_dict:
+                    count_dict[word_in_lowecase] += temp_dict[word_in_lowecase]
+
+        count_dict = dict(sorted(count_dict.items(),
+                                 key=lambda item: (item[1],
+                                                   item[0].lower()),
+                                 reverse=True))
+
+        [print('{}: {}'.format(key, value))
+         for key, value in count_dict.items() if value > 0]
