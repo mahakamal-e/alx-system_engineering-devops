@@ -2,57 +2,56 @@
 """Implement count_words function"""
 
 import requests
+import time
 
 
-def count_words(subreddit, word_list, after=None, count_dict=None):
+def fetch_hot_articles(subreddit, limit=100, after=None, titles=[]):
     """
-        queries the Reddit API, parses the title of all hot articles,
-        and prints a sorted count of given keywords
+    Args:
+
+    Returns:
+    list: A list containing the titles of the fetched articles.
     """
-
-    if not count_dict:
-        count_dict = {key.lower(): 0 for key in word_list}
-
-    url = 'https://www.reddit.com/r/{}/hot/.json'.format(subreddit)
-    params = {'limit': 100, 'after': after}
-    headers = {'User-Agent': 'custom user-agent'}
-
-    response = requests.get(url,
-                            params=params,
-                            headers=headers,
-                            allow_redirects=False)
-
-    try:
-        results = response.json()
-        if response.status_code == 404:
-            raise Exception
-    except Exception:
-        return
-
-    data = response.json().get('data', {})
-    for post in data.get('children', []):
-        title = post.get('data', {}).get('title', '').lower().split()
-
-        for key in count_dict.keys():
-            if key in title:
-                times = len([t for t in title if t == key.lower()])
-                count_dict[key] += times
-
-    if data.get('after'):
-        return count_words(subreddit, word_list, data.get('after'), count_dict)
-
+    url = f"https://www.reddit.com/r/{subreddit}/hot.json?limit={limit}"
+    if after:
+        url += f"&after={after}"
+    headers = {'User-Agent': 'YOUR_USER_AGENT'}
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        data = response.json()
+        for post in data['data']['children']:
+            titles.append(post['data']['title'].lower())
+        after = data['data']['after']
+        if after:
+            time.sleep(2)  # Rate limiting to quently
+            return fetch_hot_articles(subreddit, limit, after, titles)
+        else:
+            return titles
     else:
-        if len(word_list) > len(count_dict.keys()):
-            temp_dict = count_dict.copy()
-            for word in word_list:
-                word_in_lowecase = word.lower()
-                if word not in count_dict and word_in_lowecase in count_dict:
-                    count_dict[word_in_lowecase] += temp_dict[word_in_lowecase]
+        return None
 
-        count_dict = dict(sorted(count_dict.items(),
-                                 key=lambda item: (item[1],
-                                                   item[0].lower()),
-                                 reverse=True))
 
-        [print('{}: {}'.format(key, value))
-         for key, value in count_dict.items() if value > 0]
+def count_words(subreddit, word_list, titles=[], counts={}):
+    """
+    Returns:
+    None
+    """
+    # Fetch hot articles from the subreddit
+    titles = fetch_hot_articles(subreddit)
+    
+    if not titles:
+        # If subreddit is invalid or no posts match, print nothing
+        return
+    
+    # Count occurrences of each word in the titles
+    for title in titles:
+        for word in word_list:
+            if word.lower() in title:
+                counts[word.lower()] = counts.get(word.lower(), 0) + 1
+    
+    # Sort counts dictionary by values (count) and then by keys (alphabetically)
+    sorted_counts = sorted(counts.items(), key=lambda x: (-x[1], x[0]))
+    
+    # Print the sorted counts
+    for word, count in sorted_counts:
+        print(f"{word}: {count}")
