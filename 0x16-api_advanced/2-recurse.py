@@ -1,13 +1,11 @@
 #!/usr/bin/python3
-""" implment recurse func """
+"""Implement recurse function"""
+
 import requests
 
 
-def recurse(subreddit, hot_list=None, after=None):
-    """
-    A recursive function that queries the Reddit API,
-    and returns a list containing the titles of all hot articles
-    """
+def recurse(subreddit, hot_list=[], after=None):
+    """Returns list of hot articles titles"""
     url = 'https://www.reddit.com/r/{}/hot.json'.format(subreddit)
     params = {'limit': 100, 'after': after}
     headers = {'User-Agent': 'custom user-agent'}
@@ -27,4 +25,4 @@ def recurse(subreddit, hot_list=None, after=None):
     if data.get('after'):
         return recurse(subreddit, hot_list, data.get('after'))
     else:
-        return hot_list
+        return hot
