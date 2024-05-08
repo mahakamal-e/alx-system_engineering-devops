@@ -1,28 +1,30 @@
 #!/usr/bin/python3
-"""Implement recurse function"""
-
+""" Using recrsion to get title of top 10 hot posts"""
 import requests
 
 
-def recurse(subreddit, hot_list=[], after=None):
-    """Returns list of hot articles titles"""
-    url = 'https://www.reddit.com/r/{}/hot.json'.format(subreddit)
-    params = {'limit': 100, 'after': after}
-    headers = {'User-Agent': 'custom user-agent'}
-
-    response = requests.get(url,
+def recurse(subreddit, hot_list=[], after="", count=0):
+    """Return list of titles for all hot posts on 
+    subreddit."""
+    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
+    params = {
+        "after": after,
+        "count": count,
+        "limit": 100
+    }
+    headers = {"User-Agent": "MyApp"}
+    response = requests.get(url, headers=headers,
                             params=params,
-                            headers=headers,
                             allow_redirects=False)
-
     if response.status_code == 404:
         return None
 
-    data = response.json().get('data', {})
-    for post in data.get('children', []):
-        hot_list.append(post.get('data').get('title'))
+    results = response.json().get("data")
+    after = results.get("after")
+    count += results.get("dist")
+    for c in results.get("children"):
+        hot_list.append(c.get("data").get("title"))
 
-    if data.get('after'):
-        return recurse(subreddit, hot_list, data.get('after'))
-    else:
-        return hot
+    if after is not None:
+        return recurse(subreddit, hot_list, after, count)
+    return hot_list
