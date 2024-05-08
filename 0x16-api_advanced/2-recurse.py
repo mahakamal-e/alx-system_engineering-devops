@@ -22,8 +22,5 @@ def recurse(subreddit, hot_list=[], params=None):
             return recurse(subreddit, hot_list, params)
         else:
             return hot_list
-    elif response.status_code == 429:
-        time.sleep(1)
-        return recurse(subreddit, hot_list, params)
     else:
         return None
