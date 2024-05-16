@@ -16,7 +16,6 @@ server {
         }
 
         root /var/www/html;
-
         index index.html index.htm index.nginx-debian.html;
 
         server_name 3.85.1.33;
@@ -24,17 +23,20 @@ server {
         location /airbnb-onepage/ {
                 proxy_pass http://127.0.0.1:5000;
         }
+
         location ~ /airbnb-dynamic/number_odd_or_even/(\d+)$ {
             proxy_pass http://127.0.0.1:5001/number_odd_or_even/$1;
         }
+
         location /api {
                 proxy_pass http://127.0.0.1:5002/api;
         }
 
         location / {
-                  proxy_pass http://127.0.0.1:5003/2-hbnb;
+                proxy_pass http://127.0.0.1:5003/2-hbnb;
         }
+
         location /static {
                 alias /home/ubuntu/AirBnB_clone_v4/web_dynamic/static/;
         }
-} 
+}
